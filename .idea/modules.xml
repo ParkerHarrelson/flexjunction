@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/flexjunction.iml" filepath="$PROJECT_DIR$/.idea/flexjunction.iml" />
+      <module fileurl="file://$PROJECT_DIR$/webservices/ws_flexjunction_user_management/ws_flexjunction_user_management.iml" filepath="$PROJECT_DIR$/webservices/ws_flexjunction_user_management/ws_flexjunction_user_management.iml" />
     </modules>
   </component>
 </project>
