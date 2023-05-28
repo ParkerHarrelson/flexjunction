@@ -1,9 +1,10 @@
 package com.flexjunction.usermanagement.exception;
 
-public class InvalidUsernameException extends RuntimeException {
+public class MissingSecurityQuestionException extends RuntimeException {
 
     private final String username;
-    public InvalidUsernameException(String message, String username) {
+
+    public MissingSecurityQuestionException(String message, String username) {
         super(message);
         this.username = username;
     }

@@ -38,4 +38,10 @@ public class User extends ExpirableEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<UserAddress> userAddress;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<UserSecurityQuestions> securityQuestions;
 }

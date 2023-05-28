@@ -17,9 +17,10 @@ public class UserRegistrationDTO {
     private String password;
     private String confirmPassword;
     private String phoneNumber;
-    private String fullName;
+    private String firstName;
+    private String middleName;
+    private String lastName;
     private UserAddressDTO userAddress;
     private String dateOfBirth;
     private Map<String, String> userSecurityQuestions;
-    private boolean termsConsented = false;
 }

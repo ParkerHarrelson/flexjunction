@@ -17,8 +17,14 @@
 
     <properties>
         <java.version>17</java.version>
+        <user.management.entity.version>LOCAL-SNAPSHOT</user.management.entity.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.flexjunction.usermanagement</groupId>
+            <artifactId>lib_flexjunction_user_entity</artifactId>
+            <version>${user.management.entity.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
