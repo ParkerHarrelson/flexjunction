@@ -2,9 +2,7 @@ package com.flexjunction.usermanagement.exceptionhandler;
 
 import com.flexjunction.usermanagement.controller.UserRegistrationController;
 import com.flexjunction.usermanagement.dto.UserRegistrationStatusDTO;
-import com.flexjunction.usermanagement.exception.InvalidPasswordException;
-import com.flexjunction.usermanagement.exception.InvalidUsernameException;
-import com.flexjunction.usermanagement.exception.MissingNameException;
+import com.flexjunction.usermanagement.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +27,30 @@ public class RegistrationExceptionsHandler extends ResponseEntityExceptionHandle
         return new ResponseEntity<>(status, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(value = InvalidEmailException.class)
+    protected ResponseEntity<UserRegistrationStatusDTO> handleInvalidUsername(InvalidEmailException e) {
+        log.error(e.getMessage(), e);
+        UserRegistrationStatusDTO status = UserRegistrationStatusDTO.builder()
+                .username(e.getUsername())
+                .status(FAILED.getStatus())
+                .message(e.getMessage())
+                .build();
+        return new ResponseEntity<>(status, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(value = InvalidPasswordException.class)
     protected ResponseEntity<UserRegistrationStatusDTO> handleInvalidPassword(InvalidPasswordException e) {
+        log.error(e.getMessage(), e);
+        UserRegistrationStatusDTO status = UserRegistrationStatusDTO.builder()
+                .username(e.getUsername())
+                .status(FAILED.getStatus())
+                .message(e.getMessage())
+                .build();
+        return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = InvalidAddressException.class)
+    protected ResponseEntity<UserRegistrationStatusDTO> handleInvalidPassword(InvalidAddressException e) {
         log.error(e.getMessage(), e);
         UserRegistrationStatusDTO status = UserRegistrationStatusDTO.builder()
                 .username(e.getUsername())

@@ -1,22 +1,26 @@
 package com.flexjunction.usermanagement.service;
 
+import com.flexjunction.usermanagement.dto.UserAddressDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationStatusDTO;
 import com.flexjunction.usermanagement.entity.User;
+import com.flexjunction.usermanagement.entity.UserAddress;
 import com.flexjunction.usermanagement.entity.UserSecurityQuestions;
-import com.flexjunction.usermanagement.exception.InvalidPasswordException;
-import com.flexjunction.usermanagement.exception.InvalidUsernameException;
-import com.flexjunction.usermanagement.exception.MissingNameException;
-import com.flexjunction.usermanagement.exception.MissingSecurityQuestionException;
+import com.flexjunction.usermanagement.exception.*;
 import com.flexjunction.usermanagement.repository.UserRepository;
+import com.flexjunction.usermanagement.util.EmailUtilService;
 import com.flexjunction.usermanagement.util.PasswordUtilService;
 import com.flexjunction.usermanagement.util.UsernameUtilService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import static com.flexjunction.usermanagement.constants.ExceptionConstants.*;
@@ -30,16 +34,24 @@ public class UserRegistrationService {
 
     private final PasswordUtilService passwordUtilService;
     private final UsernameUtilService usernameUtilService;
+    private final EmailUtilService emailUtilService;
     private final UserRepository userRepository;
 
+    @Transactional
     public UserRegistrationStatusDTO registerNewUser(UserRegistrationDTO userRegistrationInfo) {
         String username = userRegistrationInfo.getUsername();
         validateUsername(username);
+        validateEmail(userRegistrationInfo.getEmailAddress(), username);
+        validateAddress(userRegistrationInfo.getUserAddress(), username);
 
         String fullName = formFullName(userRegistrationInfo.getFirstName(), userRegistrationInfo.getMiddleName(), userRegistrationInfo.getLastName(), username);
         String passHash = checkPasswordAndGetHash(userRegistrationInfo.getPassword(), userRegistrationInfo.getConfirmPassword(), username);
 
+        User user = buildUser(username, fullName, passHash, userRegistrationInfo.getEmailAddress());
+        user.setUserAddress(buildAddress(userRegistrationInfo.getUserAddress(), user));
+        user.setSecurityQuestions(buildSecurityQuestions(userRegistrationInfo.getUserSecurityQuestions(), user));
 
+        userRepository.saveAndFlush(user);
 
         return UserRegistrationStatusDTO.builder()
                 .username(username)
@@ -66,20 +78,61 @@ public class UserRegistrationService {
         }
     }
 
-    private String formFullName(String first, String middle, String last, String username) {
-        if (isBlank(first) || isBlank(last)) {
-            throw new MissingNameException(MISSING_NAME_EXCEPTION, username);
-        } else {
-            if (isBlank(middle)) {
-                return first + " " + last;
-            } else {
-                return first + " " + middle + " " + last;
-            }
+    private void validateEmail(String email, String username) {
+        if (!emailUtilService.isValidEmail(email)) {
+            throw new InvalidEmailException(INVALID_EMAIL_EXCEPTION, username);
+        } else if (!emailUtilService.isAvailableEmail(email)) {
+            throw new InvalidEmailException(String.format(NON_UNIQUE_EMAIL_EXCEPTION, email), username);
         }
     }
 
-    private User buildUser() {
+    private void validateAddress(UserAddressDTO address, String username) {
+        if (isBlank(address.getStreetAddress()) || isBlank(address.getCity())
+            || isBlank(address.getZipCode()) || isBlank(address.getCountry())) {
+            throw new InvalidAddressException(INVALID_ADDRESS_EXCEPTION, username);
+        }
+    }
 
+    private String formFullName(String first, String middle, String last, String username) {
+        if (isBlank(first) || isBlank(last)) {
+            throw new MissingNameException(MISSING_NAME_EXCEPTION, username);
+        }
+        StringJoiner joiner = new StringJoiner(" ");
+        joiner.add(first);
+
+        if (!isBlank(middle)) {
+            joiner.add(middle);
+        }
+
+        joiner.add(last);
+
+        return joiner.toString();
+    }
+
+    private User buildUser(String username, String fullName, String passHash, String email) {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+
+        User user = new User();
+        user.setUsername(username);
+        user.setFullName(fullName);
+        user.setPasswordHash(passHash);
+        user.setEmail(email);
+        user.setEffectiveTimestamp(now);
+
+        return user;
+    }
+
+    private Set<UserAddress> buildAddress(UserAddressDTO userAddress, User user) {
+        UserAddress address = new UserAddress();
+        address.setUser(user);
+        address.setStreetAddress(userAddress.getStreetAddress());
+        address.setCity(userAddress.getCity());
+        address.setState(userAddress.getStateAbbreviation());
+        address.setCountry(userAddress.getCountry());
+        address.setZipCode(userAddress.getZipCode());
+        address.setEffectiveTimestamp(user.getEffectiveTimestamp());
+
+        return Set.of(address);
     }
 
     private Set<UserSecurityQuestions> buildSecurityQuestions(Map<String, String> securityQuestions, User user) {
@@ -93,6 +146,7 @@ public class UserRegistrationService {
                     userSecurityQuestions.setQuestion(entry.getKey());
                     userSecurityQuestions.setAnswer(entry.getValue());
                     userSecurityQuestions.setUser(user);
+                    userSecurityQuestions.setEffectiveTimestamp(user.getEffectiveTimestamp());
                     return userSecurityQuestions;
                 }).collect(Collectors.toSet());
     }

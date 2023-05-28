@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "UserAddress", schema = "USERS")
+@Table(name = "UserAddress")
 public class UserAddress extends ExpirableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -19,19 +19,19 @@ public class UserAddress extends ExpirableEntity implements Serializable {
     @Column(name = "UserAddressID", unique = true, nullable = false)
     private Integer userAddressId;
 
-    @Column(name = "StreetAddress")
+    @Column(name = "StreetAddress", nullable = false)
     private String streetAddress;
 
-    @Column(name = "City")
+    @Column(name = "City", nullable = false)
     private String city;
 
     @Column(name = "State")
     private String state;
 
-    @Column(name = "Zip")
+    @Column(name = "Zip", nullable = false)
     private String zipCode;
 
-    @Column(name = "Country")
+    @Column(name = "Country", nullable = false)
     private String country;
 
     @ToString.Exclude

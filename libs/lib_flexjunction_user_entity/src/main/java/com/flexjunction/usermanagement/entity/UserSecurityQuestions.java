@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "UserSecurityQuestions", schema = "USERS")
+@Table(name = "UserSecurityQuestions")
 public class UserSecurityQuestions extends ExpirableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

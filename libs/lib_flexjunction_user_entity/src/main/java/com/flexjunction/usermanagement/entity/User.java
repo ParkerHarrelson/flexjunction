@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "User", schema = "USERS")
+@Table(name = "User")
 public class User extends ExpirableEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
