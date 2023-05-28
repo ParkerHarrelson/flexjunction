@@ -12,9 +12,9 @@ import javax.sql.DataSource;
 public class DBConfiguration {
 
     @Bean
-    @ConfigurationProperties(prefix = "flexjunction.usermanagement.datasource")
-    public DataSource dataSource(@Value("${flexjunction.usermanagement.datasource.user}") String username,
-                                 @Value("${flexjunction.usermanagement.datasource.password}") String password) {
+    @ConfigurationProperties(prefix = "flex-junction.user-management.datasource")
+    public DataSource dataSource(@Value("${flex-junction.user-management.datasource.user}") String username,
+                                 @Value("${flex-junction.user-management.datasource.password}") String password) {
         return DataSourceBuilder.create().username(username).password(password).build();
     }
 }

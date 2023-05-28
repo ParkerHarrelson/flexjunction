@@ -13,9 +13,15 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         id:
           new_generator_mappings: false
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
-flexjunction:
-  usermanagement:
+flex-junction:
+  user-management:
     datasource:
       jdbc-url: jdbc:mysql://localhost:3306/USERS?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
       driver-class-name: com.mysql.cj.jdbc.Driver
