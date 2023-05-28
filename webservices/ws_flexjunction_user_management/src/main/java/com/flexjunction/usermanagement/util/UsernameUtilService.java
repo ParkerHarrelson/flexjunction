@@ -14,7 +14,7 @@ public class UsernameUtilService {
 
     // repository for finding existing usernames
 
-    private final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]{3,15}$");
+    private final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]{3,20}$");
 
     public boolean isValidUsername(String username) {
         if (isBlank(username)) {

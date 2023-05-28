@@ -18,7 +18,7 @@ import static com.flexjunction.usermanagement.constants.RegistrationStatus.FAILE
 public class RegistrationExceptionsHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = InvalidUsernameException.class)
-    protected ResponseEntity<UserRegistrationStatusDTO> handleNonUniqueUsername(InvalidUsernameException e) {
+    protected ResponseEntity<UserRegistrationStatusDTO> handleInvalidUsername(InvalidUsernameException e) {
         log.error(e.getMessage(), e);
         UserRegistrationStatusDTO status = UserRegistrationStatusDTO.builder()
                 .username(e.getUsername())
