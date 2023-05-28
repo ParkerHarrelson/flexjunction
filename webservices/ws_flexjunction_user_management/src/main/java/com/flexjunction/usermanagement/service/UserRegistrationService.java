@@ -118,6 +118,7 @@ public class UserRegistrationService {
         user.setPasswordHash(passHash);
         user.setEmail(email);
         user.setEffectiveTimestamp(now);
+        user.setIsAccountConfirmed(false);
 
         return user;
     }

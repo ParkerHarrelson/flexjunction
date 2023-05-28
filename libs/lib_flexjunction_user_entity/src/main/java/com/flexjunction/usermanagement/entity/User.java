@@ -33,6 +33,9 @@ public class User extends ExpirableEntity implements Serializable {
     @Column(name = "FullName", nullable = false)
     private String fullName;
 
+    @Column(name = "AccountConfirmed", nullable = false)
+    private Boolean isAccountConfirmed ;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

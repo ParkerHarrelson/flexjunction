@@ -70,4 +70,15 @@ public class RegistrationExceptionsHandler extends ResponseEntityExceptionHandle
                 .build();
         return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = MissingSecurityQuestionException.class)
+    protected ResponseEntity<UserRegistrationStatusDTO> handleMissingName(MissingSecurityQuestionException e) {
+        log.error(e.getMessage(), e);
+        UserRegistrationStatusDTO status = UserRegistrationStatusDTO.builder()
+                .username(e.getUsername())
+                .status(FAILED.getStatus())
+                .message(e.getMessage())
+                .build();
+        return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
+    }
 }

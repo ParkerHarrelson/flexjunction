@@ -1,7 +1,7 @@
 package com.flexjunction.usermanagement.util;
 
 import lombok.AllArgsConstructor;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -14,7 +14,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @AllArgsConstructor
 public class PasswordUtilService {
 
-    //private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     private final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$");
 
 
@@ -32,6 +32,6 @@ public class PasswordUtilService {
     }
 
     public String hashPassword(String password) {
-        return password;
+        return bCryptPasswordEncoder.encode(password);
     }
 }
