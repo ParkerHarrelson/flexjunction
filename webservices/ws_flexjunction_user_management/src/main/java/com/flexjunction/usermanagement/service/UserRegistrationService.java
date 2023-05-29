@@ -4,9 +4,11 @@ import com.flexjunction.usermanagement.dto.UserAddressDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationStatusDTO;
 import com.flexjunction.usermanagement.entity.User;
+import com.flexjunction.usermanagement.entity.UserAccountConfirmation;
 import com.flexjunction.usermanagement.entity.UserAddress;
 import com.flexjunction.usermanagement.entity.UserSecurityQuestions;
 import com.flexjunction.usermanagement.exception.*;
+import com.flexjunction.usermanagement.repository.UserAccountConfirmationRepository;
 import com.flexjunction.usermanagement.repository.UserRepository;
 import com.flexjunction.usermanagement.util.EmailUtilService;
 import com.flexjunction.usermanagement.util.PasswordUtilService;
@@ -18,9 +20,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.flexjunction.usermanagement.constants.ExceptionConstants.*;
@@ -36,6 +36,7 @@ public class UserRegistrationService {
     private final UsernameUtilService usernameUtilService;
     private final EmailUtilService emailUtilService;
     private final UserRepository userRepository;
+    private final UserAccountConfirmationRepository userAccountConfirmationRepository;
 
     @Transactional
     public UserRegistrationStatusDTO registerNewUser(UserRegistrationDTO userRegistrationInfo) {
@@ -51,13 +52,50 @@ public class UserRegistrationService {
         user.setUserAddress(buildAddress(userRegistrationInfo.getUserAddress(), user));
         user.setSecurityQuestions(buildSecurityQuestions(userRegistrationInfo.getUserSecurityQuestions(), user));
 
-        userRepository.saveAndFlush(user);
+        User savedUser = userRepository.saveAndFlush(user);
+        generateConfirmationTokenAndSendEmail(savedUser);
 
         return UserRegistrationStatusDTO.builder()
                 .username(username)
                 .status(SUCCESS.getStatus())
                 .message(SUCCESSFUL_REGISTRATION)
                 .build();
+    }
+
+    @Transactional
+    public String confirmAccount(String token) {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        Optional<UserAccountConfirmation> confirmationToken = userAccountConfirmationRepository.findByConfirmationToken(token);
+
+        if (confirmationToken.isPresent()) {
+            UserAccountConfirmation accountToken = confirmationToken.get();
+            if (accountToken.getConfirmedTimestamp() != null) {
+                return "This confirmation link has already been used!";
+            } else if (accountToken.getExpirationTimestamp().isBefore(now)) {
+                return "This confirmation link has expired. Will need to generate a new one.";
+            }else {
+                accountToken.setConfirmedTimestamp(now);
+                accountToken.getUser().setIsAccountConfirmed(true);
+                userAccountConfirmationRepository.saveAndFlush(accountToken);
+                userRepository.saveAndFlush(accountToken.getUser());
+                return "Account Confirmed!";
+            }
+        } else {
+            throw new ConfirmAccountException(String.format(BROKEN_LINK_EXCEPTION, token));
+        }
+    }
+
+    private void generateConfirmationTokenAndSendEmail(User user) {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+
+        UserAccountConfirmation confirmationToken = new UserAccountConfirmation();
+        confirmationToken.setConfirmationToken(UUID.randomUUID().toString());
+        confirmationToken.setEffectiveTimestamp(now);
+        confirmationToken.setExpirationTimestamp(now.plusDays(1L));
+        confirmationToken.setUser(user);
+
+        userAccountConfirmationRepository.saveAndFlush(confirmationToken);
+        emailUtilService.sendConfirmationEmail(user.getEmail(), confirmationToken.getConfirmationToken());
     }
 
     private String checkPasswordAndGetHash(String password, String verifyPassword, String username) {

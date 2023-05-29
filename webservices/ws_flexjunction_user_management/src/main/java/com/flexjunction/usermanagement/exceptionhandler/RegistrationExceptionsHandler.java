@@ -28,7 +28,7 @@ public class RegistrationExceptionsHandler extends ResponseEntityExceptionHandle
     }
 
     @ExceptionHandler(value = InvalidEmailException.class)
-    protected ResponseEntity<UserRegistrationStatusDTO> handleInvalidUsername(InvalidEmailException e) {
+    protected ResponseEntity<UserRegistrationStatusDTO> handleInvalidEmail(InvalidEmailException e) {
         log.error(e.getMessage(), e);
         UserRegistrationStatusDTO status = UserRegistrationStatusDTO.builder()
                 .username(e.getUsername())
@@ -50,7 +50,7 @@ public class RegistrationExceptionsHandler extends ResponseEntityExceptionHandle
     }
 
     @ExceptionHandler(value = InvalidAddressException.class)
-    protected ResponseEntity<UserRegistrationStatusDTO> handleInvalidPassword(InvalidAddressException e) {
+    protected ResponseEntity<UserRegistrationStatusDTO> handleInvalidAddress(InvalidAddressException e) {
         log.error(e.getMessage(), e);
         UserRegistrationStatusDTO status = UserRegistrationStatusDTO.builder()
                 .username(e.getUsername())
@@ -72,7 +72,7 @@ public class RegistrationExceptionsHandler extends ResponseEntityExceptionHandle
     }
 
     @ExceptionHandler(value = MissingSecurityQuestionException.class)
-    protected ResponseEntity<UserRegistrationStatusDTO> handleMissingName(MissingSecurityQuestionException e) {
+    protected ResponseEntity<UserRegistrationStatusDTO> handleMissingSecurityQuestion(MissingSecurityQuestionException e) {
         log.error(e.getMessage(), e);
         UserRegistrationStatusDTO status = UserRegistrationStatusDTO.builder()
                 .username(e.getUsername())
@@ -80,5 +80,17 @@ public class RegistrationExceptionsHandler extends ResponseEntityExceptionHandle
                 .message(e.getMessage())
                 .build();
         return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = ConfirmationEmailFailureException.class)
+    protected ResponseEntity<String> handleFailedEmail(ConfirmationEmailFailureException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = ConfirmAccountException.class)
+    protected ResponseEntity<String> handleFailedConfirmAccount(ConfirmAccountException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

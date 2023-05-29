@@ -14,5 +14,7 @@ public class ExceptionConstants {
     public static final String MISSING_SECURITY_QUESTION_EXCEPTION = "No security question and answer was provided. We recommend you have at least 2.";
     public static final String INVALID_EMAIL_EXCEPTION = "Provided email was invalid because it either was not a valid address or was left blank";
     public static final String INVALID_ADDRESS_EXCEPTION = "One or more fields in the address form were left blank.";
+    public static final String CONFIRMATION_EMAIL_EXCEPTION = "Failed to send confirmation email to %s";
+    public static final String BROKEN_LINK_EXCEPTION = "The link is invalid or broken! Token = %s";
 
 }
