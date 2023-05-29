@@ -10,7 +10,7 @@ public class EmailSenderConfiguration {
 
     @Bean
     public EmailSender emailSender(@Value("${flex-junction.confirmation-email.email}") String email,
-                                   @Value("${flex-junction.confirmation-email.api-key}") String apiKey) {
+                                   @Value("${EMAIL_API}") String apiKey) {
         return new EmailSender(email, apiKey);
     }
 }
