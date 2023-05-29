@@ -13,4 +13,6 @@ import static com.flexjunction.usermanagement.constants.ApplicationConstants.URL
 public class UserDetailsController {
 
     private final UserDetailsService userDetailsService;
+
+    // endpoint for retrieving profile info
 }

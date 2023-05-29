@@ -1,5 +1,6 @@
 package com.flexjunction.usermanagement.controller;
 
+import com.flexjunction.usermanagement.dto.ResendConfirmationRequestDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationStatusDTO;
 import com.flexjunction.usermanagement.service.UserRegistrationService;
@@ -26,4 +27,10 @@ public class UserRegistrationController {
     public ResponseEntity<String> confirmAccount(@RequestParam("confirmation-token") String token) {
         return new ResponseEntity<>(userRegistrationService.confirmAccount(token), HttpStatus.OK);
     }
+
+    @PostMapping(path = URL_RESEND_CONFIRMATION)
+    public ResponseEntity<String> resendConfirmation(@RequestBody ResendConfirmationRequestDTO resendConfirmationRequest) {
+        return new ResponseEntity<>(userRegistrationService.resendConfirmationEmail(resendConfirmationRequest), HttpStatus.OK);
+    }
+
 }

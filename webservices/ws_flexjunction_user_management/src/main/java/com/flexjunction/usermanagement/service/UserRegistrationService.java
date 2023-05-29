@@ -1,5 +1,6 @@
 package com.flexjunction.usermanagement.service;
 
+import com.flexjunction.usermanagement.dto.ResendConfirmationRequestDTO;
 import com.flexjunction.usermanagement.dto.UserAddressDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationStatusDTO;
@@ -73,7 +74,7 @@ public class UserRegistrationService {
                 return "This confirmation link has already been used!";
             } else if (accountToken.getExpirationTimestamp().isBefore(now)) {
                 return "This confirmation link has expired. Will need to generate a new one.";
-            }else {
+            } else {
                 accountToken.setConfirmedTimestamp(now);
                 accountToken.getUser().setIsAccountConfirmed(true);
                 userAccountConfirmationRepository.saveAndFlush(accountToken);
@@ -82,6 +83,31 @@ public class UserRegistrationService {
             }
         } else {
             throw new ConfirmAccountException(String.format(BROKEN_LINK_EXCEPTION, token));
+        }
+    }
+
+    @Transactional
+    public String resendConfirmationEmail(ResendConfirmationRequestDTO resendConfirmationRequest) {
+        if (!emailUtilService.isValidEmail(resendConfirmationRequest.getEmail())) {
+            return "Invalid email address.";
+        } else {
+            String email = resendConfirmationRequest.getEmail();
+            Optional<UserAccountConfirmation> accountConfirmation = userAccountConfirmationRepository.findExisingConfirmation(email);
+
+            if (accountConfirmation.isPresent()) {
+                OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+                UserAccountConfirmation token = accountConfirmation.get();
+
+                token.setConfirmationToken(UUID.randomUUID().toString());
+                token.setEffectiveTimestamp(now);
+                token.setExpirationTimestamp(now.plusDays(1L));
+
+                userAccountConfirmationRepository.saveAndFlush(token);
+                emailUtilService.sendConfirmationEmail(email, token.getConfirmationToken());
+                return "New confirmation email sent to " + email;
+            } else {
+                return "No account found to confirm. Please try creating an account.";
+            }
         }
     }
 

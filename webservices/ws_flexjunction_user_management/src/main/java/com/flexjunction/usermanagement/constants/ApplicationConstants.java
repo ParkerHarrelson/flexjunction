@@ -11,6 +11,7 @@ public class ApplicationConstants {
     public static final String URL_USER_REGISTRATION_BASE = "/user-registration";
     public static final String URL_CONFIRM_ACCOUNT = "/confirm-account";
     public static final String URL_USER_REGISTER = "/register";
+    public static final String URL_RESEND_CONFIRMATION = "/resend-confirmation";
 
     // MESSAGES
     public static final String SUCCESSFUL_REGISTRATION = "User was successfully registered.";

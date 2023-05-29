@@ -13,4 +13,12 @@ import static com.flexjunction.usermanagement.constants.ApplicationConstants.URL
 public class UserManagementController {
 
     private final UserManagementService userManagementService;
+
+    // endpoint for changing password
+
+    // endpoint for updating general profile info
+
+    // endpoint for deleting account (actually expires account)
+
+    // endpoint for modifying bio
 }
