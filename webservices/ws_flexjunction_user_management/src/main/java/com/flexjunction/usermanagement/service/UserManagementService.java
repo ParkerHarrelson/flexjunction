@@ -1,6 +1,8 @@
 package com.flexjunction.usermanagement.service;
 
 
+import com.flexjunction.usermanagement.dto.PasswordResetRequestDTO;
+import com.flexjunction.usermanagement.dto.ResetRequestDTO;
 import com.flexjunction.usermanagement.entity.User;
 import com.flexjunction.usermanagement.exception.InvalidPasswordException;
 import com.flexjunction.usermanagement.exception.UserNotFoundException;
@@ -10,8 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.flexjunction.usermanagement.constants.ExceptionConstants.INVALID_PASSWORD_EXCEPTION;
-import static com.flexjunction.usermanagement.constants.ExceptionConstants.USER_NOT_FOUND_EXCEPTION;
+import static com.flexjunction.usermanagement.constants.ExceptionConstants.*;
 
 @Service
 @AllArgsConstructor
@@ -27,12 +28,32 @@ public class UserManagementService {
                 .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_EXCEPTION, username)));
 
         if (!passwordUtilService.passwordsHashMatch(oldPassword, user.getPasswordHash())) {
-            throw new IllegalArgumentException("Old password does not match!");
-        } else if (passwordUtilService.isNotValidPassword(newPassword)) {
+            throw new InvalidPasswordException(OLD_PASS_DOES_NOT_MATCH_EXCEPTION, username);
+        }
+        if (passwordUtilService.isNotValidPassword(newPassword)) {
             throw new InvalidPasswordException(INVALID_PASSWORD_EXCEPTION, username);
+        }
+        if (passwordUtilService.passwordsMatch(oldPassword, newPassword)) {
+            throw new InvalidPasswordException(DUPLICATE_PASS_EXCEPTION, username);
         }
 
         user.setPasswordHash(passwordUtilService.hashPassword(newPassword));
         userRepository.saveAndFlush(user);
     }
+
+    @Transactional
+    public String forgotPassword(ResetRequestDTO resetRequest) {
+
+    }
+
+    @Transactional
+    public String resetPassword(PasswordResetRequestDTO resetRequest) {
+
+    }
+
+    @Transactional
+    public void cancelPasswordReset(String token) {
+
+    }
+
 }

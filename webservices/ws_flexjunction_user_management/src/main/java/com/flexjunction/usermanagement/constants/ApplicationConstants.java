@@ -13,7 +13,13 @@ public class ApplicationConstants {
     public static final String URL_CONFIRM_ACCOUNT = "/confirm-account";
     public static final String URL_USER_REGISTER = "/register";
     public static final String URL_RESEND_CONFIRMATION = "/resend-confirmation";
+    public static final String URL_FORGOT_PASSWORD = "/forgot-password";
+    public static final String URL_RESET_PASSWORD = "/reset-password";
+    public static final String URL_CANCEL_PASSWORD_RESET = "/cancel-password-reset";
 
     // MESSAGES
     public static final String SUCCESSFUL_REGISTRATION = "User was successfully registered.";
+    public static final String CONFIRM_ACCOUNT = "To confirm your account, please click the following link: ";
+    public static final String SUBJECT_ACCOUNT_CONFIRMATION = "FlexJunction Account Confirmation";
+    public static final String CONFIRMATION_EMAIL_ENDPOINT = "http://localhost:8080/ws_flexjunction_user_management/user-registration/confirm-account?confirmation-token=";
 }

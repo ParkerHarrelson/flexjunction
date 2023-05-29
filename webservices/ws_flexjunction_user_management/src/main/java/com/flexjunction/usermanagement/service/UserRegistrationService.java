@@ -1,6 +1,6 @@
 package com.flexjunction.usermanagement.service;
 
-import com.flexjunction.usermanagement.dto.ResendConfirmationRequestDTO;
+import com.flexjunction.usermanagement.dto.ResetRequestDTO;
 import com.flexjunction.usermanagement.dto.UserAddressDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationDTO;
 import com.flexjunction.usermanagement.dto.UserRegistrationStatusDTO;
@@ -24,8 +24,8 @@ import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.flexjunction.usermanagement.constants.ApplicationConstants.*;
 import static com.flexjunction.usermanagement.constants.ExceptionConstants.*;
-import static com.flexjunction.usermanagement.constants.ApplicationConstants.SUCCESSFUL_REGISTRATION;
 import static com.flexjunction.usermanagement.constants.RegistrationStatus.SUCCESS;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -87,7 +87,7 @@ public class UserRegistrationService {
     }
 
     @Transactional
-    public String resendConfirmationEmail(ResendConfirmationRequestDTO resendConfirmationRequest) {
+    public String resendConfirmationEmail(ResetRequestDTO resendConfirmationRequest) {
         if (!emailUtilService.isValidEmail(resendConfirmationRequest.getEmail())) {
             return "Invalid email address.";
         } else {
@@ -103,7 +103,7 @@ public class UserRegistrationService {
                 token.setExpirationTimestamp(now.plusDays(1L));
 
                 userAccountConfirmationRepository.saveAndFlush(token);
-                emailUtilService.sendConfirmationEmail(email, token.getConfirmationToken());
+                emailUtilService.sendEmail(email, token.getConfirmationToken(), SUBJECT_ACCOUNT_CONFIRMATION, CONFIRM_ACCOUNT, CONFIRMATION_EMAIL_ENDPOINT);
                 return "New confirmation email sent to " + email;
             } else {
                 return "No account found to confirm. Please try creating an account.";
@@ -121,7 +121,7 @@ public class UserRegistrationService {
         confirmationToken.setUser(user);
 
         userAccountConfirmationRepository.saveAndFlush(confirmationToken);
-        emailUtilService.sendConfirmationEmail(user.getEmail(), confirmationToken.getConfirmationToken());
+        emailUtilService.sendEmail(user.getEmail(), confirmationToken.getConfirmationToken(), SUBJECT_ACCOUNT_CONFIRMATION, CONFIRM_ACCOUNT, CONFIRMATION_EMAIL_ENDPOINT);
     }
 
     private String checkPasswordAndGetHash(String password, String verifyPassword, String username) {

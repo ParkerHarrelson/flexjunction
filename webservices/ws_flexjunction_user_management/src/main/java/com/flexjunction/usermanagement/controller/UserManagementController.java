@@ -1,12 +1,14 @@
 package com.flexjunction.usermanagement.controller;
 
+import com.flexjunction.usermanagement.dto.PasswordResetRequestDTO;
+import com.flexjunction.usermanagement.dto.ResetRequestDTO;
 import com.flexjunction.usermanagement.service.UserManagementService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.flexjunction.usermanagement.constants.ApplicationConstants.URL_CHANGE_PASSWORD;
-import static com.flexjunction.usermanagement.constants.ApplicationConstants.URL_USER_MANAGEMENT_BASE;
+import static com.flexjunction.usermanagement.constants.ApplicationConstants.*;
 
 @RestController
 @RequestMapping(URL_USER_MANAGEMENT_BASE)
@@ -29,5 +31,20 @@ public class UserManagementController {
 
     // endpoint for modifying bio
 
-    // forgot password endpoint
+    // forgot password initiation endpoint
+    @PostMapping(path = URL_FORGOT_PASSWORD)
+    public ResponseEntity<String> forgotPassword(@RequestBody ResetRequestDTO resetRequest) {
+        return new ResponseEntity<>(userManagementService.forgotPassword(resetRequest), HttpStatus.OK);
+    }
+
+    @PostMapping(path = URL_RESET_PASSWORD)
+    public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequestDTO resetRequest) {
+        return new ResponseEntity<>(userManagementService.resetPassword(resetRequest), HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = URL_CANCEL_PASSWORD_RESET)
+    public ResponseEntity<Void> cancelPasswordReset(@RequestParam("reset-token") String token) {
+        userManagementService.cancelPasswordReset(token);
+        return ResponseEntity.noContent().build();
+    }
 }

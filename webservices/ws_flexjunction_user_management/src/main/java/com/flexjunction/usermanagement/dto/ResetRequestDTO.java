@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResendConfirmationRequestDTO {
+public class ResetRequestDTO {
     private String email;
 }

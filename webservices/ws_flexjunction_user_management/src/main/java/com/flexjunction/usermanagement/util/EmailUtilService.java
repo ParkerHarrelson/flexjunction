@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static com.flexjunction.usermanagement.constants.ExceptionConstants.CONFIRMATION_EMAIL_EXCEPTION;
+import static com.flexjunction.usermanagement.constants.ExceptionConstants.EMAIL_EXCEPTION;
 
 @Slf4j
 @Service
@@ -33,12 +33,10 @@ public class EmailUtilService {
     private static final String EMAIL_PATTERN = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
-    public void sendConfirmationEmail(String email, String token) {
+    public void sendEmail(String email, String token, String subject, String message, String endpoint) {
         Email from = new Email(emailSender.getFromEmail());
         Email to = new Email(email);
-        Content emailContent = new Content("text/plain", "To confirm your account, please click the following link: "
-                + "http://localhost:8080/ws_flexjunction_user_management/user-registration/confirm-account?confirmation-token=" + token);
-        String subject = "FlexJunction Account Confirmation";
+        Content emailContent = new Content("text/plain", message + endpoint + token);
         Mail mail = new Mail(from, subject, to, emailContent);
 
         SendGrid sg = new SendGrid(emailSender.getApiKey());
@@ -51,7 +49,7 @@ public class EmailUtilService {
             Response response = sg.api(request);
             log.info(String.valueOf(response.getStatusCode()));
         }  catch (IOException e) {
-            throw new ConfirmationEmailFailureException(String.format(CONFIRMATION_EMAIL_EXCEPTION, email));
+            throw new ConfirmationEmailFailureException(String.format(EMAIL_EXCEPTION, email));
         }
     }
 
