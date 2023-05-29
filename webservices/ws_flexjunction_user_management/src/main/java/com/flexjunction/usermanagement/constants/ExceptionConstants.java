@@ -16,5 +16,6 @@ public class ExceptionConstants {
     public static final String INVALID_ADDRESS_EXCEPTION = "One or more fields in the address form were left blank.";
     public static final String CONFIRMATION_EMAIL_EXCEPTION = "Failed to send confirmation email to %s";
     public static final String BROKEN_LINK_EXCEPTION = "The link is invalid or broken! Token = %s";
+    public static final String USER_NOT_FOUND_EXCEPTION = "User %s not found.";
 
 }

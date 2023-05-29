@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
 @AllArgsConstructor
@@ -33,5 +34,9 @@ public class PasswordUtilService {
 
     public String hashPassword(String password) {
         return bCryptPasswordEncoder.encode(password);
+    }
+
+    public boolean passwordsHashMatch(String passOne, String passTwo) {
+        return isNotBlank(passOne) && bCryptPasswordEncoder.matches(passOne, passTwo);
     }
 }

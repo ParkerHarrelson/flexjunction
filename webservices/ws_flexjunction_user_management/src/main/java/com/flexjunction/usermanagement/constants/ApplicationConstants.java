@@ -7,6 +7,7 @@ public class ApplicationConstants {
 
     // URLS
     public static final String URL_USER_MANAGEMENT_BASE = "/user-management";
+    public static final String URL_CHANGE_PASSWORD = "/{username}/change-password";
     public static final String URL_USER_DETAILS_BASE = "/user-details";
     public static final String URL_USER_REGISTRATION_BASE = "/user-registration";
     public static final String URL_CONFIRM_ACCOUNT = "/confirm-account";
