@@ -23,13 +23,13 @@ public class PasswordUtilService {
         return Objects.equals(password, verifyPassword);
     }
 
-    public boolean isValidPassword(String password) {
+    public boolean isNotValidPassword(String password) {
         if (isBlank(password)) {
-            return false;
+            return true;
         }
 
         Matcher matcher = PASSWORD_PATTERN.matcher(password);
-        return matcher.matches();
+        return !matcher.matches();
     }
 
     public String hashPassword(String password) {

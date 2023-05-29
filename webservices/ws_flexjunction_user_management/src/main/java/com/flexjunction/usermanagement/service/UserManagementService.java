@@ -28,7 +28,7 @@ public class UserManagementService {
 
         if (!passwordUtilService.passwordsHashMatch(oldPassword, user.getPasswordHash())) {
             throw new IllegalArgumentException("Old password does not match!");
-        } else if (!passwordUtilService.isValidPassword(newPassword)) {
+        } else if (passwordUtilService.isNotValidPassword(newPassword)) {
             throw new InvalidPasswordException(INVALID_PASSWORD_EXCEPTION, username);
         }
 

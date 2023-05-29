@@ -125,7 +125,7 @@ public class UserRegistrationService {
     }
 
     private String checkPasswordAndGetHash(String password, String verifyPassword, String username) {
-        if (!passwordUtilService.isValidPassword(password)) {
+        if (passwordUtilService.isNotValidPassword(password)) {
             throw new InvalidPasswordException(INVALID_PASSWORD_EXCEPTION, username);
         } else if (!passwordUtilService.passwordsMatch(password, verifyPassword)) {
             throw new InvalidPasswordException(PASSWORDS_DONT_MATCH_EXCEPTION, username);
