@@ -19,4 +19,7 @@ public class ExceptionConstants {
     public static final String USER_NOT_FOUND_EXCEPTION = "User %s not found.";
     public static final String OLD_PASS_DOES_NOT_MATCH_EXCEPTION = "Old password does not match!";
     public static final String DUPLICATE_PASS_EXCEPTION = "New password is the same as old password. Please choose a new password.";
+    public static final String FIND_RESET_TOKEN_EXCEPTION = "Reset token was not found.";
+    public static final String EXPIRED_RESET_TOKEN_EXCEPTION = "Reset token that was requested has expired. Please try regenerating a new one.";
+    public static final String RESET_TOKEN_ALREADY_USED_EXCEPTION = "Reset token that was requested has already been used. Please try generating a new one";
 }

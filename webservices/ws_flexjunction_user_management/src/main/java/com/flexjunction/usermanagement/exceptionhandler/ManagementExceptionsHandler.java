@@ -3,6 +3,7 @@ package com.flexjunction.usermanagement.exceptionhandler;
 import com.flexjunction.usermanagement.controller.UserManagementController;
 import com.flexjunction.usermanagement.dto.UserRegistrationStatusDTO;
 import com.flexjunction.usermanagement.exception.InvalidPasswordException;
+import com.flexjunction.usermanagement.exception.ResetTokenException;
 import com.flexjunction.usermanagement.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,12 @@ public class ManagementExceptionsHandler {
     protected ResponseEntity<String> handleInvalidUsername(UserNotFoundException e) {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = ResetTokenException.class)
+    protected ResponseEntity<String> handleResetToken(ResetTokenException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = InvalidPasswordException.class)

@@ -31,18 +31,18 @@ public class UserManagementController {
 
     // endpoint for modifying bio
 
-    // forgot password initiation endpoint
     @PostMapping(path = URL_FORGOT_PASSWORD)
     public ResponseEntity<String> forgotPassword(@RequestBody ResetRequestDTO resetRequest) {
         return new ResponseEntity<>(userManagementService.forgotPassword(resetRequest), HttpStatus.OK);
     }
 
     @PostMapping(path = URL_RESET_PASSWORD)
-    public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequestDTO resetRequest) {
-        return new ResponseEntity<>(userManagementService.resetPassword(resetRequest), HttpStatus.OK);
+    public ResponseEntity<Void> resetPassword(@RequestBody PasswordResetRequestDTO resetRequest) {
+        userManagementService.resetPassword(resetRequest);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(path = URL_CANCEL_PASSWORD_RESET)
+    @DeleteMapping(path = URL_RESET_PASSWORD + URL_CANCEL_PASSWORD_RESET)
     public ResponseEntity<Void> cancelPasswordReset(@RequestParam("reset-token") String token) {
         userManagementService.cancelPasswordReset(token);
         return ResponseEntity.noContent().build();

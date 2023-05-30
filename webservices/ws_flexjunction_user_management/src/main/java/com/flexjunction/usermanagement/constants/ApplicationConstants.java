@@ -15,11 +15,15 @@ public class ApplicationConstants {
     public static final String URL_RESEND_CONFIRMATION = "/resend-confirmation";
     public static final String URL_FORGOT_PASSWORD = "/forgot-password";
     public static final String URL_RESET_PASSWORD = "/reset-password";
-    public static final String URL_CANCEL_PASSWORD_RESET = "/cancel-password-reset";
+    public static final String URL_CANCEL_PASSWORD_RESET = "/cancel";
 
     // MESSAGES
     public static final String SUCCESSFUL_REGISTRATION = "User was successfully registered.";
+    public static final String PASSWORD_RESET_EMAIL_SENT = "Password was successfully reset";
     public static final String CONFIRM_ACCOUNT = "To confirm your account, please click the following link: ";
+    public static final String RESET_PASSWORD = "To reset your password, please click the following link and fill in all necessary info: ";
     public static final String SUBJECT_ACCOUNT_CONFIRMATION = "FlexJunction Account Confirmation";
+    public static final String SUBJECT_PASSWORD_RESET = "FlexJunction Password Reset";
     public static final String CONFIRMATION_EMAIL_ENDPOINT = "http://localhost:8080/ws_flexjunction_user_management/user-registration/confirm-account?confirmation-token=";
+    public static final String PASSWORD_RESET_ENDPOINT = "http://localhost:8080/ws_flexjunction_user_management/user-management/reset-password?token=";
 }
