@@ -47,4 +47,10 @@ public class User extends ExpirableEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<UserSecurityQuestions> securityQuestions;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<UserPasswordReset> userPasswordResets;
 }

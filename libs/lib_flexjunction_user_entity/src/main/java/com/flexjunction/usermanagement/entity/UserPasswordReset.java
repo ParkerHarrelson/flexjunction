@@ -20,7 +20,7 @@ public class UserPasswordReset extends ExpirableEntity implements Serializable {
     @Column(name = "PasswordResetID", unique = true, nullable = false)
     private Integer passwordResetId;
 
-    @Column(name = "ResetToken")
+    @Column(name = "ResetToken", nullable = false)
     private String resetToken;
 
     @Column(name = "ConfirmedTimestamp", columnDefinition = "TIMESTAMP WITH TIME ZONE")

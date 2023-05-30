@@ -13,10 +13,9 @@ public interface UserPasswordResetRepository extends JpaRepository<UserPasswordR
     Optional<UserPasswordReset> findByResetToken(String resetToken);
 
     @Query(
-            "SELECT UserPasswordReset " +
+            "SELECT passReset " +
                     "FROM UserPasswordReset passReset " +
-                    "LEFT JOIN User user ON passReset.user.userId = user.userId " +
-                    "WHERE user.userId = :userID " +
+                    "WHERE passReset.user.userId = :userID " +
                     "AND passReset.confirmedTimestamp IS NULL " +
                     "AND passReset.expirationTimestamp > :now"
     )

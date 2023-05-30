@@ -19,7 +19,7 @@ public class ApplicationConstants {
 
     // MESSAGES
     public static final String SUCCESSFUL_REGISTRATION = "User was successfully registered.";
-    public static final String PASSWORD_RESET_EMAIL_SENT = "Password was successfully reset";
+    public static final String PASSWORD_RESET_EMAIL_SENT = "Password email was successfully sent";
     public static final String CONFIRM_ACCOUNT = "To confirm your account, please click the following link: ";
     public static final String RESET_PASSWORD = "To reset your password, please click the following link and fill in all necessary info: ";
     public static final String SUBJECT_ACCOUNT_CONFIRMATION = "FlexJunction Account Confirmation";
