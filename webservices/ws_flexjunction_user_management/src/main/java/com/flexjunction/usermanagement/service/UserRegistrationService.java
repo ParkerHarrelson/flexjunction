@@ -88,7 +88,7 @@ public class UserRegistrationService {
 
     @Transactional
     public String resendConfirmationEmail(ResetRequestDTO resendConfirmationRequest) {
-        if (!emailUtilService.isValidEmail(resendConfirmationRequest.getEmail())) {
+        if (emailUtilService.isNotValidEmail(resendConfirmationRequest.getEmail())) {
             return "Invalid email address.";
         } else {
             String email = resendConfirmationRequest.getEmail();
@@ -143,7 +143,7 @@ public class UserRegistrationService {
     }
 
     private void validateEmail(String email, String username) {
-        if (!emailUtilService.isValidEmail(email)) {
+        if (emailUtilService.isNotValidEmail(email)) {
             throw new InvalidEmailException(INVALID_EMAIL_EXCEPTION, username);
         } else if (!emailUtilService.isAvailableEmail(email)) {
             throw new InvalidEmailException(String.format(NON_UNIQUE_EMAIL_EXCEPTION, email), username);

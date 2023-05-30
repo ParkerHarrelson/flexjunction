@@ -53,13 +53,13 @@ public class EmailUtilService {
         }
     }
 
-    public boolean isValidEmail(String email) {
+    public boolean isNotValidEmail(String email) {
         if (isBlank(email)) {
-            return false;
+            return true;
         }
 
         Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        return !matcher.matches();
     }
 
     public boolean isAvailableEmail(String email) {
